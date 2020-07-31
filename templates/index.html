@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <title>Ansible Integration</title>
+        <style>
+            .hidden{
+                display: none;
+            }
+            .wrapper{
+                width: 300px;
+                
+            }
+            #form{
+                display: flex;
+                flex-direction: column;
+            }
+            .radio-element, .name-element, .color-element{
+                display: flex;
+                flex-direction: row;
+                margin-top: 3px;
+                margin-bottom: 3px;
+                text-align: center;
+                align-items: center;
+                height: 30px;
+            }
+            h4{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 20px;
+                
+            }
+            .mother{
+                height: 75vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="mother">
+            <div class="wrapper">
+                <h3>Details:</h3>
+                <form id="form">
+                    <div class="name-element">
+                        <h4>Name:</h4>
+                        <input type="text" id="username" placeholder="John Smith" style="height:25px;" />
+                    </div>
+                    <div class="color-element">
+                        <h4>Color:</h4>
+                        <input type="text" id="favcolor" placeholder="black" style="height:25px;" />
+                    </div>
+                    <div class="radio-element" id="favanimal">
+                        <input type="radio" name="catsOrDogs" value="cats" id="cats" />
+                        <label for="cats">Cats or</label><br>
+                        <input type="radio" name="catsOrDogs" value="dogs" id="dogs" />
+                        <label for="cats">Dogs</label><br>
+                    </div>
+                    <input type="submit" value="Submit" />
+                </form>
+                <div id="success" class="hidden" >Entry has been successful</div>
+                <div id="error" class="hidden" >Something went wrong</div>  
+            </div>
+        </div>
+        <script>
+            
+            //console.log(document.getElementById('form'))
+            document.getElementById('form').onsubmit = function(e){
+                const nameInput = document.getElementById('username').value;
+                const colorInput = document.getElementById('favcolor').value;
+                const animalInput = document.querySelector('input[name="catsOrDogs"]:checked').value;
+                console.log(animalInput);
+                e.preventDefault();
+                console.log(e);
+                fetch('/data/submit', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'name': nameInput,
+                        'color': colorInput,
+                        'animal': animalInput
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(function(response){
+                    return response.json();
+                })
+                .then(function(jsonResponse){
+                    console.log("GG");
+                    document.getElementById('success').className="";
+                })
+                .catch(function(){
+                    document.getElementById('error').className="";
+                });
+            }
+        </script>
+    </body>
+</html>
